@@ -1,0 +1,13 @@
+{
+  "name": "explorador-de-motivos",
+  "version": "1.3.0",
+  "description": "Lectura en red de obras narrativas: motivos, conexiones y citas con página a partir de un PDF.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "galeria": "node herramientas/generar_galeria.mjs pdfs",
+    "servir": "python3 -m http.server 8000 --directory sitio"
+  },
+  "devDependencies": { "pdfjs-dist": "6.2.108" },
+  "license": "MIT"
+}

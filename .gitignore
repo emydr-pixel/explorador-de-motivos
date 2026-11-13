@@ -1,0 +1,6 @@
+# Obras con derechos de autor vigentes o traducciones protegidas: solo para uso local
+sitio/galeria/privada/
+pdfs/
+node_modules/
+.DS_Store
+.ipynb_checkpoints/

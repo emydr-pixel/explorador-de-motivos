@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Si usas esta herramienta en un trabajo, cítala con su versión."
+title: "Explorador de motivos"
+abstract: "Herramienta de lectura distante que, a partir del PDF de una obra narrativa, identifica motivos, sus conexiones y su evolución, y devuelve cada hallazgo a las frases con su página."
+type: software
+version: "1.3.0"
+date-released: "2026-11-04"
+license: MIT
+authors:
+  - name: "Taller de Humanidades Digitales 1, Universidad del Pacífico"
+# Agrega aquí a las personas autoras, por ejemplo:
+#  - family-names: "Apellido"
+#    given-names: "Nombre"
+keywords:
+  - humanidades digitales
+  - lectura distante
+  - redes de co-ocurrencia
+  - análisis literario
+  - motivos
