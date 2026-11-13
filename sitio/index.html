@@ -1,0 +1,710 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Explorador de motivos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Una lectura en red de obras narrativas: motivos, conexiones y citas con página, a partir del PDF de una obra que ya leíste.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: tinta azul sobre papel. El azul (tinta, cabecera, enlaces, pestañas) domina; el naranja lacre marca solo las acciones principales y lo que el lector subraya. */
+:root{
+  --papel:#edf1f7; --hoja:#fbfcfe; --tinta:#14213a; --gris:#56627a; --linea:#d3dbe8; --acento:#1f4e8c; --azul-hondo:#14325e; --sobre-azul:#f3f6fb;
+  --naranja:#cf5f22; --naranja-hondo:#a94a16; --naranja-suave:#fbe6d6; --alerta:#b3412f; --titulo-obra:#c4561b;
+  --subrayado:#f7dfa3; --subrayado2:#cfe0f5;
+  --f-libro:"Literata",Georgia,"Iowan Old Style",serif; --f-ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--titulo-obra:#f39a5e;--papel:#0d1422;--hoja:#141e33;--tinta:#e5ebf5;--gris:#9ba8bf;--linea:#26344f;--acento:#86b4f0;--azul-hondo:#0f2347;--sobre-azul:#e5ebf5;--naranja:#f08b4c;--naranja-hondo:#f6a676;--naranja-suave:#3d2616;--alerta:#e2836f;--subrayado:#5b4618;--subrayado2:#20395f;color-scheme:dark}}
+:root[data-theme="dark"]{--titulo-obra:#f39a5e;--papel:#0d1422;--hoja:#141e33;--tinta:#e5ebf5;--gris:#9ba8bf;--linea:#26344f;--acento:#86b4f0;--azul-hondo:#0f2347;--sobre-azul:#e5ebf5;--naranja:#f08b4c;--naranja-hondo:#f6a676;--naranja-suave:#3d2616;--alerta:#e2836f;--subrayado:#5b4618;--subrayado2:#20395f;color-scheme:dark}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--f-ui);font-size:15px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--azul-hondo)}
+a{color:var(--acento)}
+.envoltura{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--azul-hondo);border-bottom:3px solid var(--naranja)}
+header.barra .envoltura{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px;flex-wrap:wrap}
+.marca{font-family:var(--f-libro);font-size:19px;font-weight:600;text-decoration:none;color:var(--sobre-azul);display:flex;align-items:center;gap:9px}
+.marca svg{flex:none}
+header nav{display:flex;gap:2px;flex-wrap:wrap}
+header nav a{text-decoration:none;color:var(--sobre-azul);opacity:.78;padding:6px 10px;border-radius:6px;font-size:14px}
+header nav a:hover{opacity:1}
+header nav a[aria-current=page]{opacity:1;box-shadow:inset 0 -2px 0 var(--naranja);border-radius:0}
+main{padding-block:28px 56px}
+.vista[hidden]{display:none}
+h1,h2,h3{font-family:var(--f-libro);font-weight:600;text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--acento)}
+.boton{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--linea);background:var(--hoja);color:var(--tinta);border-radius:8px;padding:9px 16px;font:500 14.5px var(--f-ui);cursor:pointer;text-decoration:none}
+.boton:hover{border-color:var(--gris)}
+.boton.pri{background:var(--naranja);border-color:var(--naranja);color:#fff}
+.boton.pri:hover{background:var(--naranja-hondo);border-color:var(--naranja-hondo)}
+.boton.azul{background:var(--acento);border-color:var(--acento);color:var(--hoja)}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+/* portada */
+.heroe{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:36px;align-items:center;padding-block:12px 40px;border-bottom:1px solid var(--linea)}
+@media (max-width:820px){.heroe{grid-template-columns:minmax(0,1fr)}}
+.heroe h1{font-size:clamp(34px,5.4vw,58px);line-height:1.04;letter-spacing:-.01em;margin:10px 0 16px}
+.heroe h1 em{font-style:italic;font-weight:400;color:var(--acento);text-decoration:underline;text-decoration-color:var(--naranja);text-decoration-thickness:3px;text-underline-offset:8px}
+.heroe p.lead{font-family:var(--f-libro);font-size:18.5px;max-width:52ch;margin:0 0 22px}
+.heroe .botones{display:flex;gap:10px;flex-wrap:wrap}
+.lamina{background:var(--hoja);border:1px solid var(--linea);border-radius:12px;padding:14px 16px 12px;min-width:0}
+.lamina .mini{width:100%;height:auto;display:block}
+.lamina figcaption{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--gris);border-top:1px solid var(--linea);padding-top:8px;margin-top:6px}
+.lamina blockquote{font-family:var(--f-libro);margin:8px 0 0;font-size:15px}
+.lamina mark{background:var(--subrayado);color:inherit}
+.obra h3,.titulo-obra{color:var(--titulo-obra)}
+.lamina figcaption .titulo-obra{font-weight:500}
+section.bloque{padding-block:38px;border-bottom:1px solid var(--linea)}
+section.bloque>header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+section.bloque h2{font-size:clamp(24px,3vw,30px)}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}
+.obra{background:var(--hoja);border:1px solid var(--linea);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.obra h3{font-size:21px}
+.obra .autor{font-family:var(--f-libro);font-style:italic;color:var(--gris)}
+.obra .ficha{font-family:var(--f-mono);font-size:12px;color:var(--gris)}
+.obra .mini{width:100%;height:auto;background:var(--papel);border-radius:8px}
+.obra .boton{margin-top:auto;align-self:flex-start}
+.obra .acciones-obra{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;align-items:center}
+.obra .acciones-obra .boton{margin-top:0}
+.boton.chico{padding:6px 11px;font-size:13.5px}
+.boton.quitar{color:var(--alerta)}
+.vacia{background:var(--hoja);border:1.5px dashed var(--linea);border-radius:12px;padding:26px;text-align:center;color:var(--gris)}
+.vacia h3{color:var(--tinta);margin-bottom:6px}
+.mini-pie{font-family:var(--f-mono);font-size:12px;color:var(--gris)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px;margin:12px 0}
+.roles div{background:var(--hoja);border:1px solid var(--linea);border-radius:10px;padding:10px 12px}
+.roles b{display:block;font-family:var(--f-libro);font-size:16.5px;color:var(--acento)}
+.roles span{font-size:14px;color:var(--gris)}
+.mision{border-left:3px solid var(--naranja);padding:4px 0 4px 12px;margin:8px 0}
+.nota-pie{color:var(--gris);font-size:13.5px;max-width:75ch;margin-top:14px}
+.pasos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:22px;counter-reset:paso;list-style:none;padding:0;margin:0}
+.pasos li{counter-increment:paso;border-top:2px solid var(--acento);padding-top:12px}
+.pasos li::before{content:counter(paso);font-family:var(--f-mono);font-size:13px;font-weight:500;color:var(--naranja);display:block;margin-bottom:4px}
+.pasos h3{font-size:18px;margin-bottom:4px}
+.pasos p{margin:0;color:var(--gris)}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px}
+.dos h3{font-size:18px;margin-bottom:6px}
+.dos ul{margin:0;padding-left:18px}
+/* herramienta */
+.taller-pdf{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.taller-pdf{grid-template-columns:minmax(0,1fr)}}
+.caja{background:var(--hoja);border:1px solid var(--linea);border-radius:12px;padding:18px;min-width:0}
+.soltar{display:block;position:relative;border:1.5px dashed var(--gris);border-radius:10px;padding:34px 18px;text-align:center;cursor:pointer;background:var(--papel)}
+.soltar span{color:var(--gris)}
+#informe{scroll-margin-top:80px}
+.soltar.encima{border-color:var(--acento);background:var(--hoja)}
+.soltar strong{font-family:var(--f-libro);font-size:20px;display:block;margin-bottom:4px}
+.soltar input{position:absolute;width:1px;height:1px;opacity:0}
+.campos{display:grid;gap:12px;margin-top:6px}
+.campos label{display:grid;gap:4px;font-size:13.5px}
+.campos input[type=text],.campos select{font:inherit;color:var(--tinta);background:var(--hoja);border:1px solid var(--linea);border-radius:7px;padding:7px 9px;max-width:100%}
+.campos .marca-check{display:flex;gap:8px;align-items:flex-start}
+details.ajustes summary{cursor:pointer;font-weight:500}
+.progreso{height:6px;background:var(--papel);border-radius:4px;overflow:hidden;margin-top:12px}
+.progreso i{display:block;height:100%;width:0;background:var(--naranja);transition:width .2s}
+.estado-proc{font-family:var(--f-mono);font-size:12.5px;color:var(--gris);margin-top:6px;min-height:1.4em}
+.informe ul{list-style:none;padding:0;margin:8px 0 12px;display:grid;gap:6px}
+.informe li{display:grid;grid-template-columns:20px 1fr;gap:6px}
+.informe .ok{color:var(--acento)} .informe .no{color:var(--alerta)}
+.informe table{border-collapse:collapse;font-size:12.5px;width:100%}
+.informe td,.informe th{border-bottom:1px solid var(--linea);padding:4px 6px;text-align:left;vertical-align:top}
+.desliza{overflow-x:auto}
+.privacidad{font-size:13px;color:var(--gris);margin-top:12px}
+.seguir{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--linea);background:var(--hoja);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.volver-barra{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+/* documentos */
+.doc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px}
+@media (max-width:820px){.doc{grid-template-columns:minmax(0,1fr)}.doc aside{display:none}}
+.doc aside{position:sticky;top:calc(70px + env(safe-area-inset-top,0px));align-self:start;font-size:13.5px}
+.doc aside a{display:block;color:var(--gris);text-decoration:none;padding:3px 0}
+.doc article{max-width:72ch}
+.doc article h1{font-size:clamp(30px,4vw,40px);margin:6px 0 14px}
+.doc article h2{font-size:23px;margin:34px 0 8px;scroll-margin-top:80px}
+.doc article h3{font-size:18px;margin:20px 0 6px}
+.doc article p,.doc article li{font-family:var(--f-libro);font-size:16.5px}
+.doc article .ui p,.doc article .ui li{font-family:var(--f-ui)}
+.formula{font-family:var(--f-mono);font-size:14px;background:var(--hoja);border:1px solid var(--linea);border-radius:8px;padding:10px 14px;overflow-x:auto}
+.doc table{border-collapse:collapse;font-size:14px;width:100%} .doc td,.doc th{border-bottom:1px solid var(--linea);padding:6px 8px;text-align:left;vertical-align:top}
+.cita-ref{font-family:var(--f-libro);background:var(--hoja);border-left:3px solid var(--naranja);padding:10px 14px;margin:10px 0}
+.copiar{font:500 13px var(--f-ui)}
+footer.pie{background:var(--azul-hondo);color:var(--sobre-azul);font-size:13px}
+footer.pie span{opacity:.8}
+footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+
+<header class="barra"><div class="envoltura">
+  <a class="marca" href="#inicio"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 21 L11 6 L21 11 L13 20 Z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="4" cy="21" r="2.6" fill="#C8553D"/><circle cx="11" cy="6" r="3.2" fill="#2E86AB"/><circle cx="21" cy="11" r="2.3" fill="#5B8C5A"/><circle cx="13" cy="20" r="2" fill="#8E5BC2"/></svg>Explorador de motivos</a>
+  <nav aria-label="Secciones"><a href="#inicio">Inicio</a><a href="#mi-galeria">Mi galería</a><a href="#herramienta">Herramienta</a><a href="#metodo">Método</a><a href="#circulos">Círculos de lectura</a><a href="#citar">Citar</a></nav>
+</div></header>
+
+<main class="envoltura">
+<!-- ================= INICIO ================= -->
+<div class="vista" id="v-inicio">
+  <section class="heroe">
+    <div>
+      <div class="eyebrow">Lectura en red · versión 1.3</div>
+      <h1>Vuelve a la obra <em>que ya leíste</em>.</h1>
+      <p class="lead">Sube el PDF de una novela, un cuento largo o una obra de teatro. El Explorador encuentra sus motivos y sus personajes, cómo se unen y cómo cambian de capítulo en capítulo, y siempre te devuelve a las frases, con su página.</p>
+      <div class="botones"><a class="boton pri" href="#herramienta">Subir un PDF</a><button class="boton azul" type="button" id="ejemplo-heroe">Abrir un ejemplo</button></div>
+    </div>
+    <figure class="lamina" id="lamina" style="margin:0">
+      <div class="mini-cont" aria-busy="true" style="aspect-ratio:300/186;display:grid;place-items:center;color:var(--gris);font-size:13px">Cargando la red de ejemplo…</div>
+      <blockquote>«Cuando Gregorio Samsa se despertó una mañana después de un sueño intranquilo, se encontró sobre su cama convertido en un monstruoso <mark>insecto</mark>.»</blockquote>
+      <figcaption><span><span class="titulo-obra">La metamorfosis</span> · Franz Kafka</span><span>cap. I · p. 12</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="bloque" id="ejemplos">
+    <header><h2>Ejemplos de lo que puedes hacer con el Explorador de motivos</h2><span class="eyebrow">Dos obras de dominio público</span></header>
+    <div class="galeria" id="lista-ejemplos"></div>
+    <p class="nota-pie">Ábrelos para ver qué obtienes antes de subir tu libro: hallazgos, la red de motivos tramo a tramo, la red de personajes con su árbol de familia, una ficha por motivo y un cuaderno de citas. Las lecturas que generes tú se guardan en <a href="#mi-galeria">Mi galería</a>.</p>
+  </section>
+
+  <section class="bloque">
+    <header><h2>Cómo funciona</h2></header>
+    <ol class="pasos">
+      <li><h3>Sube el PDF</h3><p>Debe tener texto seleccionable. Se lee en tu navegador en unos segundos.</p></li>
+      <li><h3>Revisa la limpieza</h3><p>Un informe muestra qué se quitó (portada, números de página, notas) y qué capítulos se encontraron.</p></li>
+      <li><h3>Explora</h3><p>Hallazgos, la red de motivos tramo a tramo, los personajes y su árbol de familia, una ficha por motivo y un taller para decidir tus propios motivos.</p></li>
+      <li><h3>Vuelve cuando quieras</h3><p>Cada lectura queda en <a href="#mi-galeria">Mi galería</a>, en este navegador. Descárgala como proyecto para llevarla a otro equipo o compartirla en un círculo de lectura.</p></li>
+    </ol>
+  </section>
+
+  <section class="bloque" style="border-bottom:0">
+    <div class="dos">
+      <div><h3>Para quién</h3><p style="margin:0">Para quien prepara una tesis o un trabajo sobre una obra narrativa, y para lectores curiosos que quieren mirarla de nuevo. Presupone que la leíste: los diagramas condensan tu lectura, no la reemplazan.</p></div>
+      <div><h3>Lo que no hace</h3><ul><li>No interpreta: mide qué palabras aparecen juntas.</li><li>No lee PDF escaneados ni maquetados a dos columnas.</li><li>No capta una imagen que nunca se nombra.</li></ul><p style="margin:6px 0 0"><a href="#metodo">Ver el método completo</a></p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= MI GALERÍA ================= -->
+<div class="vista" id="v-mi-galeria" hidden>
+  <section class="bloque" style="padding-top:8px">
+    <header><div><div class="eyebrow">Tus lecturas</div><h2 style="font-size:clamp(28px,4vw,38px);margin-top:4px">Mi galería</h2></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="boton pri" href="#herramienta">Subir otra obra</a>
+        <label class="boton" for="importar">Importar proyectos<input type="file" id="importar" accept=".json,application/json" multiple style="position:absolute;width:1px;height:1px;opacity:0"></label></div></header>
+    <p style="margin:-6px 0 18px;max-width:75ch;color:var(--gris)">Aquí quedan las obras que procesaste o abriste, con tus motivos, tu reparto y tus notas, tal como las dejaste. Se guardan <b>solo en este navegador</b>: descarga el proyecto de las que quieras conservar o compartir.</p>
+    <div class="estado-proc" id="estado-galeria" aria-live="polite" style="margin:-8px 0 12px"></div>
+    <div class="galeria" id="lista-mia"></div>
+  </section>
+</div>
+
+<!-- ================= HERRAMIENTA ================= -->
+<div class="vista" id="v-herramienta" hidden>
+  <div id="seguir" class="seguir" hidden></div>
+  <div class="taller-pdf">
+    <div class="caja">
+      <div class="eyebrow">Paso 1</div><h2 style="font-size:26px;margin:4px 0 12px">Sube la obra</h2>
+      <label class="soltar" id="soltar" for="pdf"><strong>Arrastra aquí el PDF</strong><span>o haz clic para elegirlo</span><input type="file" id="pdf" accept="application/pdf,.pdf"></label>
+      <div class="progreso" hidden id="progreso"><i></i></div><div class="estado-proc" id="estado-proc" aria-live="polite"></div>
+      <p class="privacidad">El PDF se procesa en este navegador; no se sube a ningún servidor.</p>
+      <details class="ajustes" style="margin-top:10px"><summary>Ajustes (solo si el informe muestra un problema)</summary>
+        <div class="campos">
+          <label for="perfil">Perfil de la obra<select id="perfil"><option value="auto">Reconocer automáticamente</option><option value="ninguno">Ninguno (detección general)</option></select></label>
+          <label for="partida">Motivos para empezar<select id="partida"><option value="perfil">Del perfil, si existe; si no, sugerencias</option><option value="sugerencias">Sugerencias automáticas</option></select></label>
+          <label for="estructura">Cómo se divide la obra<select id="estructura"><option value="">Detectar</option><option value="capitulo">«Capítulo 1, 2…»</option><option value="romano">Números romanos solos</option><option value="numero">Números arábigos solos</option><option value="titulos">Títulos en mayúsculas, sin número</option><option value="parte">«Parte», «Canto», «Libro»…</option><option value="teatro">Actos y escenas</option><option value="bloques">Sin capítulos (bloques)</option></select></label>
+          <label class="marca-check" for="cuento"><input type="checkbox" id="cuento"> <span>Es un cuento sin capítulos: dividir en bloques de unas 500 palabras</span></label>
+          <label for="inicio">La obra empieza con la frase…<input type="text" id="inicio" placeholder="Cuando Gregorio Samsa se despertó"></label>
+          <label for="final">La obra termina antes de la frase…<input type="text" id="final" placeholder="Nota del editor"></label>
+          <button class="boton" type="button" id="reprocesar" disabled>Volver a procesar con estos ajustes</button>
+        </div></details>
+    </div>
+    <div class="caja">
+      <div class="eyebrow">¿Ya tienes un proyecto?</div><h2 style="font-size:22px;margin:4px 0 8px">Abre un proyecto guardado</h2>
+      <p style="margin:0 0 12px;color:var(--gris)">Los proyectos (<code>.motivos.json</code>) guardan el texto procesado, tus motivos, notas y citas. No necesitas el PDF para abrirlos.</p>
+      <label class="boton" for="proy">Elegir archivo de proyecto<input type="file" id="proy" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0"></label>
+      <div class="estado-proc" id="estado-proy" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="caja informe" id="informe" hidden style="margin-top:20px"></div>
+</div>
+
+<!-- ================= LECTURA ================= -->
+<div class="vista" id="v-lectura" hidden>
+  <div class="volver-barra"><a href="#mi-galeria" id="volver-lectura">← Mi galería</a><span class="eyebrow" id="lectura-origen"></span></div>
+  <div id="lectura"></div>
+</div>
+
+<!-- ================= MÉTODO ================= -->
+<div class="vista" id="v-metodo" hidden>
+  <div class="doc">
+    <aside><div class="eyebrow" style="margin-bottom:6px">Contenido</div>
+      <a href="#m-limpieza">Del PDF al texto</a><a href="#m-paginas">Páginas y voces</a><a href="#m-unidades">Palabras y unidades</a><a href="#m-candidatos">Candidatos a motivos</a>
+      <a href="#m-conexiones">Conexiones</a><a href="#m-palabras">Palabras de las uniones</a><a href="#m-solidez">Solidez</a><a href="#m-familias">Familias y puente</a>
+      <a href="#m-hallazgos">Hallazgos</a><a href="#met-personajes">Personajes</a><a href="#met-arbol">Árbol de familia</a><a href="#met-conversar">Conversar</a><a href="#m-limites">Lo que no mide</a><a href="#m-refs">Referencias</a></aside>
+    <article>
+      <div class="eyebrow">Método · versión 1.3</div>
+      <h1>Cómo se calcula cada cosa</h1>
+      <p>El Explorador hace lecturas distantes de una sola obra: cuenta dónde aparecen las palabras y cuáles coinciden. Esta página explica cada cálculo para que puedas citar la herramienta con honestidad y saber qué puede y qué no puede sostener un hallazgo. Las cifras son las que usa el programa.</p>
+
+      <h2 id="m-limpieza">1. Del PDF al texto</h2>
+      <p>El PDF se lee página por página y se aplican reglas generales, en este orden:</p>
+      <ul>
+        <li><b>Cabeceras y pies repetidos</b>: una línea que aparece en al menos el 20 % de las páginas (y en 4 o más) se quita, salvo que sea un título de capítulo. Los dígitos se ignoran al comparar, así que «La metamorfosis 23» y «La metamorfosis 24» cuentan como la misma línea.</li>
+        <li><b>Números de página</b>: una línea que es solo un número (también «~ 12 ~» o «— 12 —») se quita si sigue la paginación del libro, es decir, si su valor coincide con el de las hojas vecinas (±8 hojas). Los números que no la siguen se conservan, porque pueden ser títulos de capítulo («1», «2», «3»).</li>
+        <li><b>Índice</b>: líneas con puntos guía (<code>II ........ 9</code>). <b>Adornos</b>: líneas con un solo carácter. <b>Notas al pie</b>: últimas líneas de una página que empiezan con un número o un asterisco seguido de mayúscula.</li>
+        <li><b>Notas editoriales y colofón</b>: URL, ©, ISBN, «se terminó de imprimir»… Si aparecen en el último 8 % de la obra, se corta desde ahí.</li>
+        <li><b>Palabras partidas</b>: una línea que termina en letra + guion se une con la siguiente si esta empieza en minúscula (salvo que el guion cierre un inciso).</li>
+        <li><b>Estructura</b>: se buscan títulos («CAPÍTULO 3», «Capítulo primero», «III», «3», «Acto I / Escena II», «Parte», «Canto»…) y se elige la secuencia 1, 2, 3… más larga, tolerando hasta dos títulos faltantes. Así el índice o un número suelto no se confunden con capítulos. Si no hay números, se prueban títulos en mayúsculas al comienzo de página (al menos tres, separados por unas 25 líneas o más). Si tampoco hay, la obra se divide en bloques de unas 2 500 palabras (500 en modo cuento). Todo lo anterior al primer capítulo se descarta (portada, prólogo, dedicatoria) y se informa.</li>
+      </ul>
+
+      <h2 id="m-paginas">2. Páginas y voces</h2>
+      <p>Cada frase conserva su página. Si el PDF trae la numeración impresa al pie o en la cabecera de forma regular (en al menos el 30 % de las páginas, con un desfase constante en el 60 % de ellas), se cita por <b>página impresa</b>; si no, por <b>página del PDF</b>, y la cita lo dice.</p>
+      <p>En narrativa, un párrafo que empieza con raya o guion seguido de mayúscula es diálogo; las acotaciones entre rayas («—dijo el zorro—») vuelven a la narración. También cuentan como diálogo los textos entre comillas latinas («») y los párrafos que abren con comillas. En teatro, cada línea del tipo <code>HAMLET.-</code> abre un parlamento; las acotaciones se excluyen del análisis.</p>
+
+      <h2 id="m-unidades">3. Palabras y unidades</h2>
+      <p>Las palabras se pasan a minúsculas y sin tildes, protegiendo la ñ (<i>niño</i> no se confunde con <i>nino</i>). Las conexiones se cuentan dentro de una <b>unidad</b>: la <b>oración</b> en narrativa (se corta tras . ! ? …), el <b>parlamento</b> en teatro, o, para comparar, el <b>párrafo</b> y una <b>ventana</b> de 60 palabras seguidas.</p>
+
+      <h2 id="m-candidatos">4. Candidatos a motivos</h2>
+      <p>Se descartan las palabras gramaticales, unas cuarenta formas verbales muy frecuentes con su conjugación (<i>ser, estar, tener, decir, ir</i>…) y palabras genéricas (<i>cosa, vez, modo, señor</i>). El singular y el plural se unen (<i>estrella, estrellas</i>; <i>flor, flores</i>; <i>luz, luces</i>). Entra como candidata toda palabra con al menos 4 apariciones (o una por cada 15 000 palabras en obras largas). Se ordenan en tres listas:</p>
+      <ul>
+        <li><b>Recorren toda la obra</b>: aparecen en 8 o más de sus 10 décimas partes; se ordenan por frecuencia.</li>
+        <li><b>Aparecen en ráfagas</b>: el 45 % o más de sus apariciones cae en una sola décima parte.</li>
+        <li><b>Nombres</b>: palabras escritas con mayúscula en el 85 % o más de los casos en que no empiezan oración.</li>
+      </ul>
+      <p>El cuaderno de Colab añade una cuarta lista, las palabras <b>propias de esta obra</b> frente al español general, que requiere la librería <i>wordfreq</i>.</p>
+
+      <h2 id="m-conexiones">5. Conexiones</h2>
+      <p>Para dos motivos A y B, <i>n<sub>A</sub></i> y <i>n<sub>B</sub></i> son las unidades donde aparece cada uno, <i>c</i> las unidades donde aparecen juntos y <i>N</i> el total de unidades.</p>
+      <div class="formula">fuerza = c ÷ √(n<sub>A</sub> × n<sub>B</sub>)<br>veces lo esperado (lift) = c × N ÷ (n<sub>A</sub> × n<sub>B</sub>)</div>
+      <p>La fuerza vale 1 si siempre aparecen juntos y 0 si nunca; evita que los motivos muy frecuentes se unan con todo. El <i>lift</i> compara lo observado con lo que daría el azar: 3 significa «tres veces más de lo esperado». Una conexión se muestra si <i>c</i> llega a un mínimo (2 en obras de menos de 5 000 unidades; en las más largas, una por cada 3 000 unidades y nunca menos de 3; dentro de un tramo, 2) y si su lift es mayor que 1. Se dibujan las 40 más fuertes.</p>
+
+      <h2 id="m-palabras">6. Palabras de las uniones</h2>
+      <table><tr><th>La lectura dice</th><th>Condición</th></tr>
+        <tr><td>inseparables</td><td>lift ≥ 5 y al menos 5 unidades juntas</td></tr>
+        <tr><td>muy unidos</td><td>lift ≥ 3 y al menos 3 unidades juntas</td></tr>
+        <tr><td>unidos</td><td>lift ≥ 1,8</td></tr>
+        <tr><td>cercanos</td><td>el resto de las conexiones mostradas (lift &gt; 1)</td></tr></table>
+
+      <h2 id="m-solidez">7. Solidez</h2>
+      <p>Cada conexión de la obra completa se recalcula con las tres unidades (oración, párrafo o parlamento y ventana). Es <b>sólida</b> si queda entre las más fuertes con las tres, <b>probable</b> con dos y <b>frágil</b> con una; las frágiles se dibujan punteadas. Una conexión frágil depende de cómo se mida: no la sostengas sin leer sus frases.</p>
+
+      <h2 id="m-familias">8. Familias, puente y disposición</h2>
+      <p>Los colores agrupan motivos en <b>familias</b> que se conectan más entre sí que con el resto, mediante la fase local del método de Louvain (Blondel et al., 2008), con la fuerza como peso. El <b>puente</b> es el motivo con mayor intermediación (Brandes, 2001): por él pasan más caminos cortos entre otros motivos, con distancia = 1 ÷ fuerza; se informa si supera 0,05. La posición de cada motivo se calcula con un modelo de resortes (Fruchterman y Reingold, 1991) sobre la obra completa y se mantiene en cada tramo para comparar.</p>
+
+      <h2 id="m-hallazgos">9. Hallazgos</h2>
+      <p>Solo se consideran motivos con al menos 5 apariciones (o una por cada 20 000 palabras).</p>
+      <ul>
+        <li><b>El puente</b>: mayor intermediación (&gt; 0,05).</li>
+        <li><b>Pareja constante</b>: conexión sólida (3 de 3), con 3 o más unidades juntas y el mayor lift.</li>
+        <li><b>Nace tarde</b>: primera aparición después del 30 % de la obra (la más tardía). <b>Se apaga</b>: última aparición antes del 70 % (la más temprana).</li>
+        <li><b>En ráfaga</b>: el 60 % o más de sus apariciones en un tramo que no ocupa más del 45 % de la obra.</li>
+        <li><b>Un encuentro</b>: una conexión con 4 o más unidades juntas y el 60 % o más de ellas en un mismo tramo.</li>
+        <li><b>Se evitan</b>: dos motivos con 10 o más unidades cada uno que coinciden en un 35 % o menos de lo esperado (con al menos 4 coincidencias esperadas).</li>
+      </ul>
+
+      <h2 id="met-personajes">10. Personajes</h2>
+      <p><b>Reparto.</b> Si la obra tiene perfil, se usa su reparto. Si no, se propone uno: entran como nombres las palabras que van con mayúscula en el 85 % o más de los casos en que no empiezan oración, y se juntan las que aparecen seguidas («Rosendo Maqui», «Fernanda del Carpio»). Una forma corta se une a la larga que la contiene (<i>Rosendo</i> → <i>Rosendo Maqui</i>), salvo que ambas aparezcan en una misma oración, señal de que son personas distintas. Si la forma corta cabe en varias largas, queda como nombre compartido; si suele ir con «los» («los Buendía»), es un apellido de familia y no un personaje. Un nombre de una sola palabra que va precedido de <i>a, de, del, en, hacia, desde, hasta</i> en el 45 % o más de los casos, casi nunca empieza oración, no va junto a verbos de habla y rara vez va seguido de un verbo se trata como lugar (<i>en Rumi</i>, <i>de Macondo</i>). En teatro, los hablantes entran siempre. Se proponen hasta 25 personajes.</p>
+      <p><b>Menciones.</b> Se busca cada forma del reparto en el texto y gana la más larga («José Arcadio Buendía» no cuenta como «José Arcadio»). Una forma que es nombre propio solo cuenta con mayúscula («Rosa» sí, «rosa» no). Una forma con rango (<code>aureliano [15-20]</code>) solo cuenta en esos capítulos. Una mención que sirve para varios personajes se asigna, dentro del mismo capítulo, al personaje nombrado sin ambigüedad más cerca (se prefiere el anterior: la distancia hacia atrás pesa 1 y hacia adelante 1,5); si no hay ninguno, no se cuenta.</p>
+      <p><b>Red y roles.</b> La unidad es el <b>pasaje</b>: párrafos (o parlamentos) seguidos hasta sumar unas 120 palabras, sin cruzar de capítulo. Dos personajes se unen si coinciden en 2 o más pasajes (3 en obras de más de 3 000 pasajes); se muestran las 80 uniones más frecuentes. Las palabras de la unión dependen de qué parte de los pasajes del menos frecuente comparten: la mitad o más, «casi siempre juntos»; un cuarto, «a menudo»; menos, «a veces». El peso de un personaje mezcla por igual sus menciones (más sus parlamentos) y sus pasajes compartidos. Es <b>protagonista</b> si su peso llega al 70 % del mayor y aparece en el 60 % de los tramos (como máximo tres); <b>principal</b> con 30 % y 40 %; <b>episódico</b> si el 70 % de sus menciones cae en un tramo o si todas caben en una cuarta parte de la obra; el resto, <b>secundario</b>. Es <b>puente</b> si su intermediación supera 0,15. Los círculos de color y la disposición usan los mismos métodos que la red de motivos.</p>
+      <p><b>Cómo lo llama la obra.</b> Se recogen las palabras en minúscula pegadas al nombre («el coronel Aureliano», «el viejo Rosendo») y las aposiciones entre comas («Nasha Suro, la curandera,»). Una fórmula entra si se repite al menos tres veces y si, en la obra, suele ir pegada a un nombre (así se descartan «al principio» o «en el cuarto»).</p>
+      <p><b>Motivos que lo acompañan.</b> Para cada motivo se compara la parte de los pasajes del personaje en que aparece con la parte de todos los pasajes; se muestran los que aparecen al menos 3 veces y 1,3 veces más de lo esperado.</p>
+      <h2 id="met-arbol">11. Árbol de familia</h2>
+      <p>Los vínculos vienen del perfil o de lo que escribas (<code>Nombre: hijo de A y B; esposa de C</code>). Si no hay ninguno, se proponen a partir de frases del tipo «X, hijo de Y», «Y y su hija X» o «X, su esposa». Hijos y padres ordenan las generaciones (cada hijo, al menos una fila debajo de sus padres); las parejas van lado a lado, y cuando pertenecen a generaciones distintas se unen con una curva.</p>
+      <p>Para cada vínculo se busca una frase que lo respalde: una oración que nombre a los dos personajes, con una palabra de parentesco (<i>hijo, madre, esposa, se casaron, amante</i>…) a no más de 4 palabras de uno de ellos y los dos nombres a no más de 25 palabras entre sí. Se muestran hasta tres frases. Si no hay ninguna, el vínculo se dibuja punteado: no es que sea falso, sino que el texto no lo dice en una sola frase.</p>
+
+      <h2 id="met-conversar">12. Conversar con la obra</h2>
+      <p>La pestaña <b>Conversar</b> es un compañero de lectura para quien ya leyó la obra. Usa Claude, el modelo de lenguaje de Anthropic, a través de la página publicada: la primera vez la página pide permiso y cada pregunta se descuenta del uso de la cuenta de Claude de quien la hace. En el archivo descargado no está disponible.</p>
+      <p><b>Qué se envía.</b> Nunca la obra completa. Con cada pregunta se arma un paquete con tres partes: una ficha de la obra (título, capítulos, tramos, personajes con su rol, vínculos de familia y motivos), unas 20 a 24 frases elegidas para esa pregunta y las últimas ocho intervenciones de la conversación. Las frases van numeradas con su número de frase, su capítulo y su página.</p>
+      <p><b>Cómo se eligen las frases.</b> Cada frase recibe puntos por las palabras de la pregunta que contiene, con más peso para las palabras raras en la obra (las que están en más del 20 % de las frases no cuentan); +2,5 por cada personaje de la pregunta que la frase menciona (con las mismas reglas de menciones de la sección 10) y +1,2 por cada motivo de la pregunta. Si la pregunta nombra un capítulo («en el capítulo 7»), solo se buscan frases de ese capítulo, y el selector <i>Alcance</i> limita la búsqueda a un tramo. Del total, el 60 % son las frases con más puntos y el resto se reparte a lo largo de la obra para no quedarse en un solo pasaje. Cuando la página lo permite, el modelo puede pedir una búsqueda más (hasta 12 frases) si las que recibió no bastan.</p>
+      <p><b>Reglas que recibe el modelo.</b> Responder solo con lo que dicen las frases enviadas y citarlas con su número, como [123]; si las frases no bastan, decirlo en vez de completar de memoria; separar lo que dice el texto de la interpretación, que empieza con «Una lectura posible:»; no pasar de unas 170 palabras; y ayudar a pensar más que dar conclusiones cerradas. Hay tres modos: <i>Preguntar a la obra</i> (responde citando), <i>Ponme a prueba</i> (hace preguntas de comprensión y corrige con la frase que las resuelve) y <i>Socrático</i> (responde con preguntas que llevan de vuelta al texto).</p>
+      <p><b>Cómo se comprueba.</b> Cada número citado se convierte en un botón que lleva a la frase. Debajo de cada respuesta están las frases citadas con su capítulo y página, listas para <b>＋ citar</b> o para guardar toda la respuesta en el Cuaderno. Si el modelo cita un número que no se le envió, aparece tachado en rojo y con un aviso: esa afirmación no está respaldada.</p>
+      <p><b>Límites.</b> Cada pregunta tiene un costo de uso. El modelo solo ve fragmentos: puede perder lo que está en frases que no se eligieron, y la selección depende de las palabras de la pregunta (los pronombres y apodos fuera del reparto no ayudan). Sus respuestas son hipótesis de lectura que se comprueban en el texto, no una autoridad sobre la obra.</p>
+
+      <h2 id="m-limites">13. Lo que no mide</h2>
+      <ul>
+        <li><b>Sentido.</b> Dos motivos unidos pueden coincidir por afinidad, por contraste o por casualidad. La red mide vecindad.</li>
+        <li><b>Negación e ironía.</b> «No había rosas» cuenta como <i>rosa</i>.</li>
+        <li><b>Imágenes sin palabra.</b> Una fuente que nunca se nombra no existe para el programa.</li>
+        <li><b>Sinónimos no declarados.</b> Si no agrupas <i>mirar, ver, ojos</i>, son motivos distintos.</li>
+        <li><b>Pronombres y apodos.</b> «Él», «ella» o un apodo que no está en el reparto no cuentan como mención: un personaje muy presente pero poco nombrado parece pequeño.</li>
+        <li><b>Respuestas del compañero de lectura.</b> Conversar no mide nada: propone lecturas a partir de frases elegidas. Lo que dice vale lo que valen sus citas.</li>
+        <li><b>Traducciones.</b> El análisis es de la edición que subiste, no del original.</li>
+        <li><b>Dependencia de las decisiones.</b> El diccionario de motivos, la unidad y los tramos cambian el resultado. Cámbialos y comprueba qué resiste.</li>
+      </ul>
+
+      <h2 id="m-refs">Referencias</h2>
+      <ul class="refs">
+        <li>Blondel, V. D., Guillaume, J.-L., Lambiotte, R. y Lefebvre, E. (2008). Fast unfolding of communities in large networks. <i>Journal of Statistical Mechanics: Theory and Experiment</i>, 2008(10), P10008. https://doi.org/10.1088/1742-5468/2008/10/P10008</li>
+        <li>Brandes, U. (2001). A faster algorithm for betweenness centrality. <i>Journal of Mathematical Sociology</i>, 25(2), 163–177. https://doi.org/10.1080/0022250X.2001.9990249</li>
+        <li>Church, K. W. y Hanks, P. (1990). Word association norms, mutual information, and lexicography. <i>Computational Linguistics</i>, 16(1), 22–29.</li>
+        <li>Elson, D. K., Dames, N. y McKeown, K. R. (2010). Extracting social networks from literary fiction. En <i>Proceedings of the 48th Annual Meeting of the Association for Computational Linguistics</i> (pp. 138–147). Association for Computational Linguistics.</li>
+        <li>Fruchterman, T. M. J. y Reingold, E. M. (1991). Graph drawing by force-directed placement. <i>Software: Practice and Experience</i>, 21(11), 1129–1164. https://doi.org/10.1002/spe.4380211102</li>
+        <li>Jockers, M. L. (2013). <i>Macroanalysis: Digital Methods and Literary History</i>. University of Illinois Press.</li>
+        <li>Moretti, F. (2011). Network Theory, Plot Analysis. <i>Stanford Literary Lab Pamphlets</i>, 2. (Versión abreviada en <i>New Left Review</i>, 68, 2011.)</li>
+        <li>Moretti, F. (2013). <i>Distant Reading</i>. Verso.</li>
+      </ul>
+    </article>
+  </div>
+</div>
+
+<!-- ================= CÍRCULOS DE LECTURA ================= -->
+<div class="vista" id="v-circulos" hidden>
+  <div class="doc">
+    <aside><div class="eyebrow" style="margin-bottom:6px">Contenido</div><a href="#c-que">Qué es</a><a href="#c-como">Cómo funciona</a><a href="#c-roles">Roles</a><a href="#c-misiones">Misiones</a><a href="#c-profes">Para profesores</a><a href="#c-curiosos">Para lectores curiosos</a><a href="#c-preguntas">Preguntas para conversar</a></aside>
+    <article class="ui">
+      <div class="eyebrow">Leer en grupo</div>
+      <h1>Arma un círculo de lectura con el Explorador</h1>
+      <p>Una obra se entiende distinto cuando cada persona trae lo que encontró. El Explorador sirve para eso: cada quien recorre la red, elige un hallazgo, guarda las frases que lo sostienen y lo lleva al grupo, donde se confirma, se discute o se descarta. Funciona en una clase, en un club de lectura o en un grupo de tesis.
+        <span style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="boton copiar" type="button" id="copiar-guia">Copiar la guía como texto</button><button class="boton copiar" type="button" id="bajar-pauta">Descargar la pauta (.md)</button></span></p>
+      <h2 id="c-que">Qué es</h2>
+      <p>Un círculo es un grupo pequeño (de 3 a 8 personas) que lee la misma obra y se reúne para compartir hallazgos. La herramienta no reemplaza la conversación: la ordena. Cada hallazgo llega con su página, así que la discusión vuelve siempre al texto.</p>
+      <h2 id="c-como">Cómo funciona</h2>
+      <ol class="pasos" style="margin-top:12px">
+        <li><h3>Elijan la obra</h3><p>Una persona coordina, sube el PDF y comparte el proyecto (<i>Guardar proyecto</i>) con el grupo. Así todos parten del mismo texto, los mismos capítulos y los mismos motivos.</p></li>
+        <li><h3>Explora por tu cuenta</h3><p>Antes de la sesión (unos 30 minutos): abre el proyecto, escribe tu nombre en el <b>Cuaderno</b>, elige un hallazgo (de motivos o de personajes), guarda dos o tres citas con <b>＋ citar</b> y escribe qué crees que significa.</p></li>
+        <li><h3>Compartan en la sesión</h3><p>Ronda de hallazgos: cada quien tiene tres minutos para decir qué encontró, leer su cita y explicar por qué importa. El grupo pregunta si se sostiene, busca una frase que lo contradiga y mira la red o el árbol en pantalla.</p></li>
+        <li><h3>Reúnan las notas</h3><p>Cada quien guarda su proyecto y lo envía a quien coordina, que usa <b>Cuaderno → Unir notas de otro lector</b>. Cada nota queda firmada. Con <b>Descargar notas</b> sale un documento con todas las citas y sus páginas, listo para compartir.</p></li>
+      </ol>
+      <h2 id="c-roles">Roles</h2>
+      <p>Pueden rotar en cada sesión. En grupos pequeños, una persona puede tener dos.</p>
+      <div class="roles">
+        <div><b>Coordinación</b><span>Prepara el proyecto, cuida el tiempo y une las notas al final.</span></div>
+        <div><b>Buscador de hallazgos</b><span>Trae un hallazgo de la pestaña Hallazgos o de Personajes y lo explica con sus palabras.</span></div>
+        <div><b>Guardián de las citas</b><span>Pide la página de cada afirmación y lee la frase en voz alta.</span></div>
+        <div><b>Abogado del diablo</b><span>Busca la frase que contradice el hallazgo: una conexión frágil, un vínculo sin cita, un nombre compartido mal asignado.</span></div>
+        <div><b>Relator</b><span>Anota lo que el grupo decidió: qué se sostiene, qué no y qué queda por leer.</span></div>
+      </div>
+      <h2 id="c-misiones">Misiones para una sesión</h2>
+      <p>Una misión por sesión basta. Cada una se resuelve con la herramienta y se discute con el libro en la mano.</p>
+      <div class="mision"><b>El puente.</b> ¿Qué motivo o qué personaje une partes de la obra que no se tocan? ¿Lo habías notado al leer?</div>
+      <div class="mision"><b>Lo que nace tarde.</b> Un motivo que aparece pasada la mitad de la obra: ¿qué cambió para que aparezca?</div>
+      <div class="mision"><b>Quién está cuándo.</b> En la línea de tiempo de personajes, ¿quién desaparece y quién toma su lugar? ¿Coincide con un giro de la trama?</div>
+      <div class="mision"><b>El árbol.</b> ¿Qué nombre se hereda? ¿Qué vínculo no tiene ninguna frase que lo diga, y cómo lo sabemos entonces?</div>
+      <div class="mision"><b>Cómo lo llama la obra.</b> Elijan un personaje: ¿con qué fórmulas lo nombra el texto y qué motivos lo acompañan? ¿Qué papel simbólico sugiere?</div>
+      <div class="mision"><b>Ponte a prueba.</b> Antes de la sesión, cada quien usa <b>Conversar → Ponme a prueba</b> con el capítulo que le tocó. En la sesión, traigan la pregunta que más les costó y la frase que la resuelve.</div>
+      <div class="mision"><b>Se evitan.</b> Dos motivos frecuentes que casi nunca coinciden: ¿contraste buscado o casualidad?</div>
+      <h2 id="c-profes">Para profesores</h2>
+      <p>Una sesión de 90 minutos para una clase que ya leyó la obra:</p>
+      <table><tr><th>Tiempo</th><th>Actividad</th></tr>
+        <tr><td>10 min</td><td>Presenta la lectura en red con uno de los ejemplos (<i>La metamorfosis</i> o <i>Hamlet</i>) y aclara la regla de oro: la red mide vecindad, el sentido lo decide el texto.</td></tr>
+        <tr><td>25 min</td><td>En grupos de 3 o 4, cada grupo recibe una misión distinta y prepara un hallazgo con dos citas.</td></tr>
+        <tr><td>40 min</td><td>Ronda de hallazgos: 5 minutos por grupo y 5 para que otro grupo haga de abogado del diablo.</td></tr>
+        <tr><td>15 min</td><td>Cierre: qué hallazgos resistieron, cuáles no y por qué. Los grupos envían su proyecto para unir las notas.</td></tr></table>
+      <p><b>Para evaluar</b>, más que el hallazgo importa cómo se sostiene: si la cita es pertinente, si se distingue lo que la herramienta mide de lo que el grupo interpreta y si se respondió al contraargumento.</p>
+      <h2 id="c-curiosos">Para lectores curiosos</h2>
+      <p>Un club de lectura puede usar el Explorador al terminar cada libro: alguien sube el PDF, comparte el proyecto y cada quien trae un hallazgo a la reunión. Con obras de muchos personajes, empiecen por el árbol de familia y la línea «Quién está cuándo»: ordenan la conversación antes de entrar en los detalles. Las notas unidas quedan como memoria del club.</p>
+      <h2 id="c-preguntas">Preguntas para conversar</h2>
+      <ol><li>¿Qué hallazgo confirmó algo que ya intuían al leer?</li><li>¿Cuál los sorprendió? ¿Resistió al volver al texto?</li><li>¿Qué no puede ver la herramienta en esta obra (ironía, pronombres, lo que nunca se nombra)?</li><li>¿Qué personaje pesa más en la trama de lo que dice la red, o al revés?</li><li>Si tuvieran que escribir sobre la obra, ¿qué cita usarían primero?</li></ol>
+      <p class="nota-pie">Cuando compartan proyectos, recuerden que contienen el texto de la obra: úsenlos dentro del grupo, para estudio, y no los publiquen si la obra tiene derechos de autor vigentes.</p>
+    </article>
+  </div>
+</div>
+
+<!-- ================= CITAR ================= -->
+<div class="vista" id="v-citar" hidden>
+  <div class="doc"><aside></aside><article>
+    <div class="eyebrow">Acerca de</div>
+    <h1>Citar el Explorador</h1>
+    <p>Si usas la herramienta en un trabajo, cita la versión, porque los resultados dependen de ella:</p>
+    <div class="cita-ref" id="ref-herramienta">Explorador de motivos (versión 1.3) [Software]. (2026). Taller de Humanidades Digitales 1, Universidad del Pacífico.</div>
+    <p>Las citas de la obra se toman de tu edición. La herramienta indica si la página es la <b>impresa</b> o la <b>del PDF</b>; en el segundo caso, conviértela a la página del libro antes de citar.</p>
+    <h2>Versiones</h2>
+    <table><tr><th>Versión</th><th>Cambios</th></tr>
+      <tr><td>1.3</td><td>Conversar con la obra: un compañero de lectura (Claude) que responde solo con frases numeradas de la obra, con tres modos (preguntar, ponerse a prueba, socrático), alcance por tramo y respuestas que se guardan en el Cuaderno. Funciona en la página publicada; cada pregunta usa la cuenta de Claude de quien pregunta.</td></tr>
+      <tr><td>1.2</td><td>Personajes: red de personajes con roles, nombres compartidos y rangos por capítulo; árbol de familia con las frases que respaldan cada vínculo; ficha de personaje (cómo lo llama la obra, familia, motivos que lo acompañan); reparto y familia editables en el navegador. Perfil de <i>Cien años de soledad</i>. Mi galería (las lecturas quedan en el navegador y se importan o descargan como proyectos), ejemplos en la portada, círculos de lectura con notas firmadas que se unen en un solo cuaderno, títulos de obras en naranja. Método ampliado y referencias con DOI.</td></tr>
+      <tr><td>1.1</td><td>Paleta azul con acentos naranja; versión en un solo archivo HTML que funciona sin conexión.</td></tr>
+      <tr><td>1.0</td><td>Primera versión web: lectura en el navegador, galería, proyectos guardables, página de método y guía de prueba. Mismo motor que el cuaderno de Colab (laboratorio).</td></tr></table>
+    <h2>Dos formas de usarla</h2>
+    <p><b>Web</b> (esta página): para explorar una obra sin programar. <b>Laboratorio</b> (cuaderno de Colab): para ver el método paso a paso, cambiar el código y usar la lectura asistida con IA.</p>
+    <h2>Créditos y licencias</h2>
+    <p>Código bajo licencia MIT. La lectura de PDF usa pdf.js (Mozilla, licencia Apache 2.0). Los textos de los ejemplos son de dominio público. Las obras de Mi galería son las tuyas: quedan en tu navegador y no se envían a ningún servidor.</p>
+  </article></div>
+</div>
+</main>
+
+<footer class="pie"><div class="envoltura"><span>Explorador de motivos · v1.3 · Taller de Humanidades Digitales 1</span><span>La red mide vecindad entre palabras, no sentido.</span></div></footer>
+
+<script type="module">
+// Los módulos viajan dentro de la página (archivo único) o al lado (sitio con carpeta js/).
+const incrustado = id => { const e = document.getElementById(id); return e && e.tagName === "SCRIPT" ? e : null; };   // solo los <script> que viajan dentro de la página
+const blobURL = (contenido, tipo = "text/javascript") => URL.createObjectURL(new Blob([contenido], {type: tipo}));
+const deBase64 = b64 => { const bin = atob(b64.trim()), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+const modulo = n => incrustado("m-" + n) ? import(blobURL(incrustado("m-" + n).textContent)) : import("./js/" + n + ".js");
+const [{ procesar, PERFILES, STOP, VERBOS_COMUNES }, { leerPDF }, { montarLectura, miniRed }, { calcularPersonajes, proponerReparto }] =
+  await Promise.all([modulo("motor"), modulo("pdf-lineas"), modulo("lectura"), modulo("personajes")]);
+const LEX = {STOP, VERBOS_COMUNES};
+// Conversar: la página publicada en Claude puede consultar a Claude con la cuenta de quien la usa (capacidad «sample»)
+const SAMPLE = window.claude && window.claude.use ? window.claude.use("sample").catch(() => null) : Promise.resolve(null);
+const PERSONAJES = {calcular: (D, rep, fam) => calcularPersonajes(D, LEX, rep, fam, {stopExtra: D.stop_extra}),
+                    proponer: D => proponerReparto(D, LEX, {stopExtra: D.stop_extra})};
+
+const EJEMPLOS = [
+  {id: "la-metamorfosis", archivo: "galeria/la-metamorfosis.json", nota: "Novela corta · 3 capítulos · cita por página impresa · árbol de familia"},
+  {id: "hamlet", archivo: "galeria/hamlet.json", nota: "Teatro · 5 actos, 85 escenas · trad. de Moratín · personajes por parlamentos"},
+];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const guardarLocal = (k, v) => { try { localStorage.setItem("explorador:" + k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+const leerLocal = k => { try { const v = localStorage.getItem("explorador:" + k); return v ? JSON.parse(v) : null; } catch (e) { return null; } };
+
+// ---------- descargas: capacidad de la plataforma si existe; si no, descarga normal del navegador ----------
+let descargas = null;
+if (window.claude && window.claude.use) window.claude.use("downloads").then(d => { descargas = d; }).catch(() => {});
+async function descargar(nombre, contenido, tipo) {
+  if (descargas) {
+    try { await descargas.save({filename: nombre, data: contenido}); } catch (e) { if (e && e.code !== "declined") alerta("No se pudo guardar el archivo en esta vista."); }
+    return;
+  }
+  if (window.claude) { alerta("Esta vista no permite descargar archivos. Abre la herramienta en su propia pestaña."); return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([contenido], {type: tipo})); a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function alerta(t) { const e = $("#estado-proc"); if (e) e.textContent = t; }
+
+// ---------- rutas ----------
+const VISTAS = ["inicio", "mi-galeria", "herramienta", "lectura", "metodo", "circulos", "citar"];
+let lecturaActual = null;
+async function ruta() {
+  if (pendiente) await guardarPendiente();
+  let v = (location.hash || "#inicio").slice(1);
+  if (!VISTAS.includes(v)) { const el = document.getElementById(v); if (el) { const cont = el.closest(".vista"); if (cont) { mostrarVista(cont.id.slice(2)); el.scrollIntoView(); return; } } v = "inicio"; }
+  if (v === "lectura" && !lecturaActual) v = "herramienta";
+  mostrarVista(v); window.scrollTo(0, 0);
+}
+function mostrarVista(v) {
+  VISTAS.forEach(x => document.getElementById("v-" + x).hidden = x !== v);
+  if (v === "herramienta") ofrecerSeguir();
+  if (v === "mi-galeria") pintarMiGaleria();
+  const nav = {inicio: "#inicio", "mi-galeria": "#mi-galeria", herramienta: "#herramienta", lectura: lecturaDesde, metodo: "#metodo", circulos: "#circulos", citar: "#citar"}[v];
+  document.querySelectorAll("header nav a").forEach(a => a.getAttribute("href") === nav ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+}
+window.addEventListener("hashchange", ruta);
+
+// ---------- Mi galería: las lecturas quedan en este navegador (IndexedDB) ----------
+const MIA = (() => {
+  let db = null, memoria = new Map(), aviso = "";
+  const abrir = () => new Promise(res => {
+    try { const r = indexedDB.open("explorador-de-motivos", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("lecturas", {keyPath: "id"});
+      r.onsuccess = () => { db = r.result; res(); }; r.onerror = () => { aviso = "Este navegador no deja guardar lecturas: descarga los proyectos para no perderlos."; res(); }; }
+    catch (e) { aviso = "Este navegador no deja guardar lecturas: descarga los proyectos para no perderlos."; res(); }
+  });
+  const listo = abrir();
+  const tx = (modo, f) => listo.then(() => new Promise(res => {
+    if (!db) { res(f(null)); return; }
+    try { const t = db.transaction("lecturas", modo), st = t.objectStore("lecturas"), out = f(st); t.oncomplete = () => res(out.result !== undefined ? out.result : out); t.onerror = () => res(null); }
+    catch (e) { res(null); } }));
+  return {
+    aviso: () => aviso,
+    async guardar(r) { r.actualizado = new Date().toISOString(); if (!db) { memoria.set(r.id, r); return; } await tx("readwrite", st => st.put(r)); },
+    async todas() { if (!db) await listo; if (!db) return [...memoria.values()]; const v = await tx("readonly", st => st.getAll()); return v || []; },
+    async una(id) { if (!db) await listo; if (!db) return memoria.get(id); return tx("readonly", st => st.get(id)); },
+    async quitar(id) { if (!db) { memoria.delete(id); return; } await tx("readwrite", st => st.delete(id)); },
+  };
+})();
+const idDe = (titulo, origen) => (titulo + "·" + origen).toLowerCase().replace(/[^a-z0-9ñáéíóú]+/g, "-");
+let entradaActual = null, lecturaDesde = "#herramienta";
+
+// ---------- abrir una lectura ----------
+function abrirLectura(datos, estado, origen, entrada = null) {
+  entradaActual = entrada;
+  lecturaDesde = entrada && entrada.ejemplo ? "#inicio" : "#mi-galeria";
+  lecturaActual = montarLectura($("#lectura"), datos, {estado, descargar, personajes: PERSONAJES, conversar: SAMPLE, lex: LEX, alCambiar: p => guardarCambio(p)});
+  $("#lectura-origen").textContent = origen || "";
+  $("#volver-lectura").setAttribute("href", lecturaDesde); $("#volver-lectura").textContent = entrada && entrada.ejemplo ? "← Volver al inicio" : "← Mi galería";
+  if (entrada && !entrada.ejemplo) guardarCambio(lecturaActual.proyecto(), true);
+  if (location.hash !== "#lectura") location.hash = "lectura"; else ruta();
+}
+let tGuardar, pendiente = null;
+function guardarCambio(p, ya) {
+  clearTimeout(tGuardar); pendiente = p;
+  tGuardar = setTimeout(() => guardarPendiente(), ya ? 0 : 700);
+}
+async function guardarPendiente() {
+  clearTimeout(tGuardar); const p = pendiente; pendiente = null; if (!p) return;
+  {
+    guardarLocal("ultimo-id", entradaActual && entradaActual.id);
+    if (!entradaActual) return;
+    if (entradaActual.ejemplo) {          // un ejemplo que modificas pasa a Mi galería como lectura tuya
+      entradaActual = {id: idDe(p.datos.titulo, "ejemplo-" + Date.now()), origen: "A partir del ejemplo"};
+    }
+    await MIA.guardar({id: entradaActual.id, origen: entradaActual.origen, creado: entradaActual.creado || new Date().toISOString(), proyecto: p});
+  }
+}
+addEventListener("pagehide", () => { guardarPendiente(); });
+addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") guardarPendiente(); });
+
+// ---------- ejemplos ----------
+const cacheGaleria = {};
+async function cargarObra(g) {
+  if (!cacheGaleria[g.id]) {
+    const el = incrustado("g-" + g.id);
+    if (el) cacheGaleria[g.id] = JSON.parse(el.textContent);
+    else { if (incrustado("m-motor")) throw new Error("no"); const r = await fetch(g.archivo); if (!r.ok) throw new Error("no"); cacheGaleria[g.id] = await r.json(); }
+  }
+  return cacheGaleria[g.id];
+}
+async function pintarEjemplos() {
+  const lista = $("#lista-ejemplos");
+  for (const g of EJEMPLOS) {
+    let D; try { D = await cargarObra(g); } catch (e) { continue; }
+    const m = miniRed(D, D.motivos);
+    const card = document.createElement("article"); card.className = "obra";
+    card.innerHTML = `<div>${m.svg}</div><div><h3>${esc(D.titulo)}</h3><div class="autor">${esc(D.autor)}</div></div>
+      <div class="ficha">${m.palabras.toLocaleString("es")} palabras · ${m.motivos} motivos<br>${esc(g.nota)}</div>
+      <button class="boton pri" type="button">Abrir el ejemplo</button>`;
+    card.querySelector("button").onclick = () => abrirLectura(D, null, "Ejemplo · " + D.titulo, {id: g.id, ejemplo: true});
+    lista.appendChild(card);
+    if (g.id === "la-metamorfosis") { const c = $("#lamina .mini-cont"); c.innerHTML = m.svg; c.removeAttribute("aria-busy"); c.style.display = "block"; }
+  }
+  if (!lista.children.length) lista.innerHTML = `<p class="nota-pie">No se pudieron cargar los ejemplos. Sube un PDF desde la Herramienta.</p>`;
+}
+$("#ejemplo-heroe").onclick = async () => { try { const D = await cargarObra(EJEMPLOS[0]); abrirLectura(D, null, "Ejemplo · " + D.titulo, {id: EJEMPLOS[0].id, ejemplo: true}); } catch (e) { location.hash = "herramienta"; } };
+
+// ---------- Mi galería ----------
+const MINIS = new Map();
+const fecha = iso => new Date(iso).toLocaleDateString("es", {day: "numeric", month: "long", year: "numeric"});
+async function sembrar() {          // en la copia local, las obras que ya procesaste viajan dentro del archivo
+  const semillas = [...document.querySelectorAll('script[type="application/json"][id^="mg-"]')];
+  if (!semillas.length) return;
+  const hechas = new Set(leerLocal("sembradas") || []), existentes = new Set((await MIA.todas()).map(r => r.id));
+  for (const el of semillas) { const id = el.id.slice(3); if (hechas.has(id) || existentes.has(id)) continue;
+    try { const r = JSON.parse(el.textContent); await MIA.guardar({id, origen: r.origen || "Desde tu PDF", creado: r.creado || new Date().toISOString(), proyecto: r.proyecto}); hechas.add(id); } catch (e) {} }
+  guardarLocal("sembradas", [...hechas]);
+}
+async function pintarMiGaleria() {
+  const lista = $("#lista-mia"); lista.setAttribute("aria-busy", "true");
+  const todas = (await MIA.todas()).sort((a, b) => (b.actualizado || "").localeCompare(a.actualizado || ""));
+  if (MIA.aviso()) $("#estado-galeria").textContent = MIA.aviso();
+  lista.innerHTML = ""; lista.removeAttribute("aria-busy");
+  if (!todas.length) { lista.innerHTML = `<div class="vacia" style="grid-column:1/-1"><h3>Todavía no hay lecturas tuyas</h3><p style="margin:0 0 12px">Sube el PDF de una obra o importa un proyecto (<code>.motivos.json</code>) que te hayan compartido.</p><a class="boton pri" href="#herramienta">Subir un PDF</a></div>`; return; }
+  for (const r of todas) {
+    const p = r.proyecto, D = p.datos, est = p.estado || {}, notas = (est.notas || []).length;
+    const clave = r.id + "|" + (r.actualizado || ""); let svg = MINIS.get(clave) || "";
+    if (!svg) { try { svg = miniRed(D, est.motivos || D.motivos).svg; MINIS.set(clave, svg); } catch (e) {} }
+    const card = document.createElement("article"); card.className = "obra";
+    card.innerHTML = `<div>${svg}</div><div><h3>${esc(D.titulo)}</h3><div class="autor">${esc(D.autor || "")}</div></div>
+      <div class="ficha">${(est.motivos || D.motivos).length} motivos · ${notas} ${notas === 1 ? "nota" : "notas"}${est.reparto ? " · reparto propio" : ""}<br>${esc(r.origen || "")} · ${fecha(r.actualizado || r.creado)}</div>
+      <div class="acciones-obra"><button class="boton pri chico abrir" type="button">Abrir</button><button class="boton chico bajar" type="button">Descargar proyecto</button><button class="boton chico quitar" type="button">Quitar</button></div>`;
+    card.querySelector(".abrir").onclick = () => abrirLectura(D, est, `Mi galería · ${D.titulo}`, {id: r.id, origen: r.origen, creado: r.creado});
+    card.querySelector(".bajar").onclick = () => descargar(`proyecto_${D.titulo.replace(/\s+/g, "_")}.motivos.json`, JSON.stringify(p), "application/json");
+    card.querySelector(".quitar").onclick = async () => { const b = card.querySelector(".quitar");
+      if (b.dataset.confirmar) { await MIA.quitar(r.id); pintarMiGaleria(); } else { b.dataset.confirmar = "1"; b.textContent = "¿Quitar? Pulsa otra vez"; setTimeout(() => { if (b.isConnected) { delete b.dataset.confirmar; b.textContent = "Quitar"; } }, 3500); } };
+    lista.appendChild(card);
+  }
+}
+$("#importar").addEventListener("change", async e => {
+  const st = $("#estado-galeria"); let n = 0;
+  for (const f of e.target.files) {
+    try { const j = JSON.parse(await f.text()), items = Array.isArray(j.proyectos) ? j.proyectos : [j];
+      for (const it of items) { const p = it.proyecto || it; if (!p.datos || !p.datos.O) continue;
+        await MIA.guardar({id: it.id || idDe(p.datos.titulo, "importado-" + (p.guardado || Date.now())), origen: it.origen || "Proyecto importado", creado: it.creado || p.guardado || new Date().toISOString(), proyecto: p}); n++; } }
+    catch (err) {}
+  }
+  st.textContent = n ? `${n} ${n === 1 ? "lectura importada" : "lecturas importadas"}.` : "Ese archivo no es un proyecto del Explorador de motivos.";
+  e.target.value = ""; pintarMiGaleria();
+});
+
+// ---------- herramienta: subir y procesar ----------
+Object.keys(PERFILES).forEach(p => $("#perfil").insertAdjacentHTML("beforeend", `<option value="${esc(p)}">${esc(p)}</option>`));
+let paginas = null, nombrePDF = "", ultimo = null;
+const soltar = $("#soltar");
+["dragenter", "dragover"].forEach(ev => soltar.addEventListener(ev, e => { e.preventDefault(); soltar.classList.add("encima"); }));
+["dragleave", "drop"].forEach(ev => soltar.addEventListener(ev, e => { e.preventDefault(); soltar.classList.remove("encima"); }));
+soltar.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) leerArchivo(f); });
+$("#pdf").addEventListener("change", e => { const f = e.target.files[0]; if (f) leerArchivo(f); });
+let pdfjs = null;
+async function cargarPdfjs() {
+  if (!pdfjs) {
+    if (incrustado("m-pdfjs")) {          // archivo único: pdf.js viaja en base64 dentro de la página
+      pdfjs = await import(blobURL(deBase64(incrustado("m-pdfjs").textContent)));
+      pdfjs.GlobalWorkerOptions.workerSrc = blobURL(deBase64(incrustado("m-pdfworker").textContent));
+      return pdfjs;
+    }
+    pdfjs = await import("./js/pdf.min.mjs");
+    // En la versión publicada, el lector de pdf.js viaja en base64 y se reconstruye aquí; en la copia local se usa el archivo tal cual.
+    let src = new URL("js/pdf.worker.min.mjs", location.href).href;
+    try {
+      const r = await fetch("js/pdf.worker.b64.txt");
+      if (r.ok) { const bin = atob((await r.text()).trim()), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        src = URL.createObjectURL(new Blob([bytes], {type: "text/javascript"})); }
+    } catch (e) {}
+    pdfjs.GlobalWorkerOptions.workerSrc = src;
+  }
+  return pdfjs;
+}
+async function leerArchivo(f) {
+  if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") { alerta("Ese archivo no es un PDF."); return; }
+  const barra = $("#progreso"); barra.hidden = false; barra.firstElementChild.style.width = "0";
+  $("#informe").hidden = true; alerta("Preparando el lector de PDF…");
+  try {
+    const lib = await cargarPdfjs(), datos = new Uint8Array(await f.arrayBuffer());
+    paginas = await leerPDF(lib, datos, (n, t) => { barra.firstElementChild.style.width = (100 * n / t) + "%"; alerta(`Leyendo página ${n} de ${t}…`); });
+    nombrePDF = f.name; $("#reprocesar").disabled = false; procesarActual();
+  } catch (e) { console.error(e); alerta("No se pudo leer el PDF. ¿Está protegido con contraseña o dañado?"); }
+}
+function opcionesActuales() {
+  const o = {perfil: $("#perfil").value, partida: $("#partida").value === "sugerencias" ? "sugerencias" : "perfil",
+             estructura: $("#estructura").value || undefined, inicio: $("#inicio").value.trim() || undefined, final: $("#final").value.trim() || undefined};
+  if ($("#cuento").checked) { o.estructura = o.estructura || "bloques"; o.palabras_por_bloque = 500; }
+  return o;
+}
+function procesarActual() {
+  alerta("Limpiando y buscando capítulos…");
+  setTimeout(() => {
+    const totalCar = paginas.reduce((s, p) => s + p.join("").length, 0);
+    if (totalCar < 40 * paginas.length) { alerta("Casi no hay texto: el PDF parece escaneado (imágenes). Esta versión solo lee PDF con texto seleccionable."); return; }
+    try { ultimo = procesar(paginas, nombrePDF, opcionesActuales()); pintarInforme(ultimo.informe); alerta(`Listo: ${paginas.length} páginas leídas.`); }
+    catch (e) { console.error(e); alerta("Algo falló al limpiar este PDF. Prueba con los ajustes (por ejemplo, la frase donde empieza la obra)."); }
+  }, 30);
+}
+$("#reprocesar").onclick = () => { if (paginas) procesarActual(); };
+function pintarInforme(inf) {
+  const ok = t => `<li><span class="ok" aria-hidden="true">✔</span><span>${t}</span></li>`, no = t => `<li><span class="no" aria-hidden="true">⚠</span><span>${t}</span></li>`;
+  const tipo = {teatro: "actos y escenas", bloques: "bloques de longitud fija", titulos: "capítulos con título"}[inf.modo] || "capítulos";
+  const items = [ok(`<b>${inf.palabras.toLocaleString("es")}</b> palabras en <b>${inf.segmentos}</b> segmentos (${tipo}), agrupados en <b>${inf.tramos}</b> tramos${inf.perfil ? ` · perfil reconocido: <i>${esc(inf.perfil)}</i>` : ""}`),
+    ok(inf.cita === "impresa" ? "Las citas usarán la <b>página impresa</b> del libro" : "Las citas usarán la <b>página del PDF</b> (no se encontró la numeración impresa)"),
+    ok(`Se quitó: ${inf.quitadas.map(([k, v]) => `${esc(k)} (${v})`).join(", ") || "nada"}`)];
+  if (inf.faltan.length) items.push(no(`Faltan títulos de segmento: ${inf.faltan.join(", ")}. Ese texto quedó unido al anterior.`));
+  if (inf.irregulares.length) items.push(ok(`Títulos dañados reconocidos igual: ${esc(inf.irregulares.join(", "))}`));
+  inf.avisos.forEach(a => items.push(no(esc(a))));
+  if (inf.antes.length) items.push(ok(`Antes del inicio se descartaron ${inf.antes.length} líneas: <i>${esc(inf.antes.slice(0, 2).join(" / ").slice(0, 90))}</i> … <i>${esc(inf.antes.slice(-2).join(" / ").slice(0, 90))}</i>`));
+  if (inf.final_cortado) items.push(ok(`Al final se cortó desde: <i>${esc(inf.final_cortado.join(" / ").slice(0, 120))}</i>`));
+  const filas = inf.tabla.map(s => `<tr><td>${esc(s.e)}</td><td>${esc(s.t.slice(0, 40))}</td><td style="text-align:right">${s.palabras.toLocaleString("es")}</td><td>${esc(s.empieza)}</td></tr>`).join("");
+  const box = $("#informe"); box.hidden = false;
+  box.innerHTML = `<div class="eyebrow">Paso 2</div><h2 style="font-size:26px;margin:4px 0 4px">Revisa la limpieza</h2>
+    <p style="margin:0;color:var(--gris)">Comprueba que lo quitado no sea parte de la obra y que los capítulos empiecen donde deben. Si algo falla, usa los Ajustes y vuelve a procesar.</p>
+    <ul>${items.join("")}</ul>
+    <details><summary style="cursor:pointer">Ver cómo empieza cada segmento</summary><div class="desliza"><table><tr><th>seg.</th><th>título</th><th>palabras</th><th>empieza</th></tr>${filas}</table></div></details>
+    <p style="margin:14px 0 6px">${ultimo.datos.motivos.length} motivos para empezar (${esc(inf.origen)}); se cambian después en el Taller.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="boton pri" type="button" id="abrir-lectura">Abrir la lectura →</button></div>`;
+  $("#abrir-lectura").onclick = () => abrirLectura(ultimo.datos, null, "Desde tu PDF · " + nombrePDF, {id: idDe(ultimo.datos.titulo, nombrePDF + "-" + Date.now()), origen: "Desde tu PDF"});
+  box.scrollIntoView({block: "start"});
+}
+
+// ---------- proyectos ----------
+$("#proy").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return; const st = $("#estado-proy");
+  try { const p = JSON.parse(await f.text()); if (!p.datos || !p.datos.O) throw new Error("x"); st.textContent = "";
+    abrirLectura(p.datos, p.estado, `Proyecto · guardado el ${new Date(p.guardado).toLocaleDateString("es")}`, {id: idDe(p.datos.titulo, "importado-" + (p.guardado || Date.now())), origen: "Proyecto importado"}); }
+  catch (err) { st.textContent = "Ese archivo no es un proyecto del Explorador de motivos."; }
+  e.target.value = "";
+});
+async function ofrecerSeguir() {
+  const id = leerLocal("ultimo-id"); if (!id) return; const r = await MIA.una(id); if (!r) return;
+  const p = r.proyecto, box = $("#seguir"); box.hidden = false;
+  box.innerHTML = `<span>Seguir con <b class="titulo-obra">${esc(p.datos.titulo)}</b> donde lo dejaste (${((p.estado || {}).notas || []).length} notas).</span><span style="display:flex;gap:8px"><a class="boton" href="#mi-galeria">Mi galería</a><button class="boton pri" type="button">Continuar</button></span>`;
+  box.querySelector("button").onclick = () => abrirLectura(p.datos, p.estado, `Mi galería · ${p.datos.titulo}`, {id: r.id, origen: r.origen, creado: r.creado});
+}
+
+// ---------- círculos de lectura: copiar y descargar la guía ----------
+const textoGuia = () => document.querySelector("#v-circulos article").innerText.replace(/Copiar la guía como texto|Descargar la pauta \(\.md\)/g, "").trim();
+$("#copiar-guia").onclick = async () => {
+  try { await navigator.clipboard.writeText(textoGuia()); $("#copiar-guia").textContent = "Guía copiada"; }
+  catch (e) { const r = document.createRange(); r.selectNodeContents(document.querySelector("#v-circulos article")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("#copiar-guia").textContent = "Selecciona y copia (Ctrl+C)"; }
+};
+$("#bajar-pauta").onclick = () => {
+  const a = document.querySelector("#v-circulos article"); let md = "";
+  a.querySelectorAll("h1,h2,h3,p,li,.roles div,.mision,tr").forEach(el => {
+    if (el.closest(".roles div") && el.tagName !== "DIV") return;
+    if (el.matches("li") && el.closest(".pasos")) { md += `- **${el.querySelector("h3").innerText}.** ${el.querySelector("p").innerText}\n`; return; }
+    if (el.closest(".pasos")) return;
+    const t = el.innerText.replace(/Copiar la guía como texto|Descargar la pauta \(\.md\)/g, "").trim(); if (!t) return;
+    if (el.tagName === "H1") md += `# ${t}\n\n`; else if (el.tagName === "H2") md += `\n## ${t}\n\n`; else if (el.tagName === "TR") md += `| ${[...el.children].map(c => c.innerText).join(" | ")} |\n`;
+    else if (el.tagName === "LI") md += `- ${t}\n`; else if (el.matches(".roles div")) md += `- **${el.querySelector("b").innerText}:** ${el.querySelector("span").innerText}\n`; else md += `${t}\n\n`; });
+  descargar("pauta_circulo_de_lectura.md", md + "\n---\nExplorador de motivos v1.3\n", "text/markdown");
+};
+
+await sembrar(); ruta(); pintarEjemplos();
+</script>
+</body></html>
