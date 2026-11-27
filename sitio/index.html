@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Explorador de motivos</title>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Urdimbre · explorador de motivos</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Una lectura en red de obras narrativas: motivos, conexiones y citas con página, a partir del PDF de una obra que ya leíste.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@ a{color:var(--acento)}
 header.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--azul-hondo);border-bottom:3px solid var(--naranja)}
 header.barra .envoltura{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px;flex-wrap:wrap}
 .marca{font-family:var(--f-libro);font-size:19px;font-weight:600;text-decoration:none;color:var(--sobre-azul);display:flex;align-items:center;gap:9px}
-.marca svg{flex:none}
+.marca svg{flex:none}.marca-nombre{letter-spacing:.01em}.marca-sub{font:400 12.5px/1.2 var(--f-ui);opacity:.75;margin-left:2px;padding-left:9px;border-left:1px solid currentColor}@media (max-width:560px){.marca-sub{display:none}}
 header nav{display:flex;gap:2px;flex-wrap:wrap}
 header nav a{text-decoration:none;color:var(--sobre-azul);opacity:.78;padding:6px 10px;border-radius:6px;font-size:14px}
 header nav a:hover{opacity:1}
@@ -131,7 +131,7 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
 </style>
 
 <header class="barra"><div class="envoltura">
-  <a class="marca" href="#inicio"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 21 L11 6 L21 11 L13 20 Z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="4" cy="21" r="2.6" fill="#C8553D"/><circle cx="11" cy="6" r="3.2" fill="#2E86AB"/><circle cx="21" cy="11" r="2.3" fill="#5B8C5A"/><circle cx="13" cy="20" r="2" fill="#8E5BC2"/></svg>Explorador de motivos</a>
+  <a class="marca" href="#inicio"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M7 3v20M13 3v20M19 3v20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".85"/><path d="M3 9.5C5.5 6.5 8.5 6.5 10 9.5S14.5 12.5 16 9.5S20.5 6.5 23 9.5" fill="none" stroke="#F39A5E" stroke-width="2.3" stroke-linecap="round"/><path d="M3 16.5C5.5 19.5 8.5 19.5 10 16.5S14.5 13.5 16 16.5S20.5 19.5 23 16.5" fill="none" stroke="#9CC9E6" stroke-width="2.3" stroke-linecap="round"/></svg><span class="marca-nombre">Urdimbre</span><span class="marca-sub">explorador de motivos</span></a>
   <nav aria-label="Secciones"><a href="#inicio">Inicio</a><a href="#mi-galeria">Mi galería</a><a href="#herramienta">Herramienta</a><a href="#metodo">Método</a><a href="#circulos">Círculos de lectura</a><a href="#citar">Citar</a></nav>
 </div></header>
 
@@ -140,9 +140,9 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
 <div class="vista" id="v-inicio">
   <section class="heroe">
     <div>
-      <div class="eyebrow">Lectura en red · versión 1.3</div>
+      <div class="eyebrow">Urdimbre · lectura en red · versión 1.3.1</div>
       <h1>Vuelve a la obra <em>que ya leíste</em>.</h1>
-      <p class="lead">Sube el PDF de una novela, un cuento largo o una obra de teatro. El Explorador encuentra sus motivos y sus personajes, cómo se unen y cómo cambian de capítulo en capítulo, y siempre te devuelve a las frases, con su página.</p>
+      <p class="lead">Sube el PDF de una novela, un cuento largo o una obra de teatro. Urdimbre encuentra los hilos que la sostienen —sus motivos y sus personajes—, cómo se cruzan y cómo cambian de capítulo en capítulo, y siempre te devuelve a las frases, con su página.</p>
       <div class="botones"><a class="boton pri" href="#herramienta">Subir un PDF</a><button class="boton azul" type="button" id="ejemplo-heroe">Abrir un ejemplo</button></div>
     </div>
     <figure class="lamina" id="lamina" style="margin:0">
@@ -153,7 +153,7 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
   </section>
 
   <section class="bloque" id="ejemplos">
-    <header><h2>Ejemplos de lo que puedes hacer con el Explorador de motivos</h2><span class="eyebrow">Dos obras de dominio público</span></header>
+    <header><h2>Ejemplos de lo que puedes hacer con Urdimbre</h2><span class="eyebrow">Dos obras de dominio público</span></header>
     <div class="galeria" id="lista-ejemplos"></div>
     <p class="nota-pie">Ábrelos para ver qué obtienes antes de subir tu libro: hallazgos, la red de motivos tramo a tramo, la red de personajes con su árbol de familia, una ficha por motivo y un cuaderno de citas. Las lecturas que generes tú se guardan en <a href="#mi-galeria">Mi galería</a>.</p>
   </section>
@@ -232,9 +232,9 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
       <a href="#m-conexiones">Conexiones</a><a href="#m-palabras">Palabras de las uniones</a><a href="#m-solidez">Solidez</a><a href="#m-familias">Familias y puente</a>
       <a href="#m-hallazgos">Hallazgos</a><a href="#met-personajes">Personajes</a><a href="#met-arbol">Árbol de familia</a><a href="#met-conversar">Conversar</a><a href="#m-limites">Lo que no mide</a><a href="#m-refs">Referencias</a></aside>
     <article>
-      <div class="eyebrow">Método · versión 1.3</div>
+      <div class="eyebrow">Método · versión 1.3.1</div>
       <h1>Cómo se calcula cada cosa</h1>
-      <p>El Explorador hace lecturas distantes de una sola obra: cuenta dónde aparecen las palabras y cuáles coinciden. Esta página explica cada cálculo para que puedas citar la herramienta con honestidad y saber qué puede y qué no puede sostener un hallazgo. Las cifras son las que usa el programa.</p>
+      <p>Urdimbre hace lecturas distantes de una sola obra: cuenta dónde aparecen las palabras y cuáles coinciden. Esta página explica cada cálculo para que puedas citar la herramienta con honestidad y saber qué puede y qué no puede sostener un hallazgo. Las cifras son las que usa el programa.</p>
 
       <h2 id="m-limpieza">1. Del PDF al texto</h2>
       <p>El PDF se lee página por página y se aplican reglas generales, en este orden:</p>
@@ -343,8 +343,8 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
     <aside><div class="eyebrow" style="margin-bottom:6px">Contenido</div><a href="#c-que">Qué es</a><a href="#c-como">Cómo funciona</a><a href="#c-roles">Roles</a><a href="#c-misiones">Misiones</a><a href="#c-profes">Para profesores</a><a href="#c-curiosos">Para lectores curiosos</a><a href="#c-preguntas">Preguntas para conversar</a></aside>
     <article class="ui">
       <div class="eyebrow">Leer en grupo</div>
-      <h1>Arma un círculo de lectura con el Explorador</h1>
-      <p>Una obra se entiende distinto cuando cada persona trae lo que encontró. El Explorador sirve para eso: cada quien recorre la red, elige un hallazgo, guarda las frases que lo sostienen y lo lleva al grupo, donde se confirma, se discute o se descarta. Funciona en una clase, en un club de lectura o en un grupo de tesis.
+      <h1>Arma un círculo de lectura con Urdimbre</h1>
+      <p>Una obra se entiende distinto cuando cada persona trae lo que encontró. Urdimbre sirve para eso: cada quien recorre la red, elige un hallazgo, guarda las frases que lo sostienen y lo lleva al grupo, donde se confirma, se discute o se descarta. Funciona en una clase, en un club de lectura o en un grupo de tesis.
         <span style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="boton copiar" type="button" id="copiar-guia">Copiar la guía como texto</button><button class="boton copiar" type="button" id="bajar-pauta">Descargar la pauta (.md)</button></span></p>
       <h2 id="c-que">Qué es</h2>
       <p>Un círculo es un grupo pequeño (de 3 a 8 personas) que lee la misma obra y se reúne para compartir hallazgos. La herramienta no reemplaza la conversación: la ordena. Cada hallazgo llega con su página, así que la discusión vuelve siempre al texto.</p>
@@ -382,7 +382,7 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
         <tr><td>15 min</td><td>Cierre: qué hallazgos resistieron, cuáles no y por qué. Los grupos envían su proyecto para unir las notas.</td></tr></table>
       <p><b>Para evaluar</b>, más que el hallazgo importa cómo se sostiene: si la cita es pertinente, si se distingue lo que la herramienta mide de lo que el grupo interpreta y si se respondió al contraargumento.</p>
       <h2 id="c-curiosos">Para lectores curiosos</h2>
-      <p>Un club de lectura puede usar el Explorador al terminar cada libro: alguien sube el PDF, comparte el proyecto y cada quien trae un hallazgo a la reunión. Con obras de muchos personajes, empiecen por el árbol de familia y la línea «Quién está cuándo»: ordenan la conversación antes de entrar en los detalles. Las notas unidas quedan como memoria del club.</p>
+      <p>Un club de lectura puede usar Urdimbre al terminar cada libro: alguien sube el PDF, comparte el proyecto y cada quien trae un hallazgo a la reunión. Con obras de muchos personajes, empiecen por el árbol de familia y la línea «Quién está cuándo»: ordenan la conversación antes de entrar en los detalles. Las notas unidas quedan como memoria del club.</p>
       <h2 id="c-preguntas">Preguntas para conversar</h2>
       <ol><li>¿Qué hallazgo confirmó algo que ya intuían al leer?</li><li>¿Cuál los sorprendió? ¿Resistió al volver al texto?</li><li>¿Qué no puede ver la herramienta en esta obra (ironía, pronombres, lo que nunca se nombra)?</li><li>¿Qué personaje pesa más en la trama de lo que dice la red, o al revés?</li><li>Si tuvieran que escribir sobre la obra, ¿qué cita usarían primero?</li></ol>
       <p class="nota-pie">Cuando compartan proyectos, recuerden que contienen el texto de la obra: úsenlos dentro del grupo, para estudio, y no los publiquen si la obra tiene derechos de autor vigentes.</p>
@@ -394,12 +394,14 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
 <div class="vista" id="v-citar" hidden>
   <div class="doc"><aside></aside><article>
     <div class="eyebrow">Acerca de</div>
-    <h1>Citar el Explorador</h1>
+    <h1>Citar Urdimbre</h1>
+    <p><b>Sobre el nombre.</b> La urdimbre es el conjunto de hilos que se tensan en el telar y sobre los que se teje la trama. «Texto» viene del latín <i>textum</i>, «tejido»: Urdimbre muestra los hilos que sostienen una obra (sus motivos y sus personajes), dónde se cruzan y en qué frases. Hasta la versión 1.3 se llamó <i>Explorador de motivos</i>, que queda como subtítulo.</p>
     <p>Si usas la herramienta en un trabajo, cita la versión, porque los resultados dependen de ella:</p>
-    <div class="cita-ref" id="ref-herramienta">Explorador de motivos (versión 1.3) [Software]. (2026). Taller de Humanidades Digitales 1, Universidad del Pacífico.</div>
+    <div class="cita-ref" id="ref-herramienta">Urdimbre: explorador de motivos (versión 1.3.1) [Software]. (2026). Taller de Humanidades Digitales 1, Universidad del Pacífico.</div>
     <p>Las citas de la obra se toman de tu edición. La herramienta indica si la página es la <b>impresa</b> o la <b>del PDF</b>; en el segundo caso, conviértela a la página del libro antes de citar.</p>
     <h2>Versiones</h2>
     <table><tr><th>Versión</th><th>Cambios</th></tr>
+      <tr><td>1.3.1</td><td>Nuevo nombre: <b>Urdimbre</b> (antes, Explorador de motivos, que queda como subtítulo) y nuevo logotipo de hilos. Sin cambios en los cálculos: los proyectos guardados con versiones anteriores se abren igual.</td></tr>
       <tr><td>1.3</td><td>Conversar con la obra: un compañero de lectura (Claude) que responde solo con frases numeradas de la obra, con tres modos (preguntar, ponerse a prueba, socrático), alcance por tramo y respuestas que se guardan en el Cuaderno. Funciona en la página publicada; cada pregunta usa la cuenta de Claude de quien pregunta.</td></tr>
       <tr><td>1.2</td><td>Personajes: red de personajes con roles, nombres compartidos y rangos por capítulo; árbol de familia con las frases que respaldan cada vínculo; ficha de personaje (cómo lo llama la obra, familia, motivos que lo acompañan); reparto y familia editables en el navegador. Perfil de <i>Cien años de soledad</i>. Mi galería (las lecturas quedan en el navegador y se importan o descargan como proyectos), ejemplos en la portada, círculos de lectura con notas firmadas que se unen en un solo cuaderno, títulos de obras en naranja. Método ampliado y referencias con DOI.</td></tr>
       <tr><td>1.1</td><td>Paleta azul con acentos naranja; versión en un solo archivo HTML que funciona sin conexión.</td></tr>
@@ -412,7 +414,7 @@ footer.pie .envoltura{display:flex;justify-content:space-between;gap:12px;flex-w
 </div>
 </main>
 
-<footer class="pie"><div class="envoltura"><span>Explorador de motivos · v1.3 · Taller de Humanidades Digitales 1</span><span>La red mide vecindad entre palabras, no sentido.</span></div></footer>
+<footer class="pie"><div class="envoltura"><span>Urdimbre · explorador de motivos · v1.3.1 · Taller de Humanidades Digitales 1</span><span>La red mide vecindad entre palabras, no sentido.</span></div></footer>
 
 <script type="module">
 // Los módulos viajan dentro de la página (archivo único) o al lado (sitio con carpeta js/).
@@ -591,7 +593,7 @@ $("#importar").addEventListener("change", async e => {
         await MIA.guardar({id: it.id || idDe(p.datos.titulo, "importado-" + (p.guardado || Date.now())), origen: it.origen || "Proyecto importado", creado: it.creado || p.guardado || new Date().toISOString(), proyecto: p}); n++; } }
     catch (err) {}
   }
-  st.textContent = n ? `${n} ${n === 1 ? "lectura importada" : "lecturas importadas"}.` : "Ese archivo no es un proyecto del Explorador de motivos.";
+  st.textContent = n ? `${n} ${n === 1 ? "lectura importada" : "lecturas importadas"}.` : "Ese archivo no es un proyecto de Urdimbre.";
   e.target.value = ""; pintarMiGaleria();
 });
 
@@ -677,7 +679,7 @@ $("#proy").addEventListener("change", async e => {
   const f = e.target.files[0]; if (!f) return; const st = $("#estado-proy");
   try { const p = JSON.parse(await f.text()); if (!p.datos || !p.datos.O) throw new Error("x"); st.textContent = "";
     abrirLectura(p.datos, p.estado, `Proyecto · guardado el ${new Date(p.guardado).toLocaleDateString("es")}`, {id: idDe(p.datos.titulo, "importado-" + (p.guardado || Date.now())), origen: "Proyecto importado"}); }
-  catch (err) { st.textContent = "Ese archivo no es un proyecto del Explorador de motivos."; }
+  catch (err) { st.textContent = "Ese archivo no es un proyecto de Urdimbre."; }
   e.target.value = "";
 });
 async function ofrecerSeguir() {
@@ -702,7 +704,7 @@ $("#bajar-pauta").onclick = () => {
     const t = el.innerText.replace(/Copiar la guía como texto|Descargar la pauta \(\.md\)/g, "").trim(); if (!t) return;
     if (el.tagName === "H1") md += `# ${t}\n\n`; else if (el.tagName === "H2") md += `\n## ${t}\n\n`; else if (el.tagName === "TR") md += `| ${[...el.children].map(c => c.innerText).join(" | ")} |\n`;
     else if (el.tagName === "LI") md += `- ${t}\n`; else if (el.matches(".roles div")) md += `- **${el.querySelector("b").innerText}:** ${el.querySelector("span").innerText}\n`; else md += `${t}\n\n`; });
-  descargar("pauta_circulo_de_lectura.md", md + "\n---\nExplorador de motivos v1.3\n", "text/markdown");
+  descargar("pauta_circulo_de_lectura.md", md + "\n---\nUrdimbre · explorador de motivos v1.3.1\n", "text/markdown");
 };
 
 await sembrar(); ruta(); pintarEjemplos();

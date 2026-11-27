@@ -1,4 +1,4 @@
-// Explorador de motivos · la lectura en red (versión web)
+// Urdimbre (explorador de motivos) · la lectura en red (versión web)
 // crearModelo(D) hace los cálculos (sin DOM); montarLectura(raiz, D, opciones) dibuja la lectura completa.
 
 const PALETA = ["#C8553D", "#2E86AB", "#5B8C5A", "#8E5BC2", "#D9822B", "#3D7A8C", "#B5838D", "#7A8B3A", "#A26A42", "#5C6BC0"];
@@ -310,7 +310,7 @@ export function montarLectura(raiz, D, opciones = {}) {
   </section>
   <section class="vista" data-v="conversar" hidden>
     <p class="intro">Conversa con la obra. El compañero de lectura responde <b>solo con frases del libro</b>, numeradas y citadas con su página, para que puedas comprobar cada respuesta. Está pensado para quien ya la leyó: sirve para repasar, aclarar dudas y ponerse a prueba.</p>
-    <div class="aviso nodispcv" hidden>La conversación usa Claude y funciona en la página publicada del Explorador, abierta desde Claude. En este archivo o en otro navegador no está disponible; el resto de la herramienta funciona igual.</div>
+    <div class="aviso nodispcv" hidden>La conversación usa Claude y funciona en la página publicada de Urdimbre, abierta desde Claude. En este archivo o en otro navegador no está disponible; el resto de la herramienta funciona igual.</div>
     <div class="dispcv" hidden>
       <div class="ctl"><div class="modoscv vpjs" style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn modocv" type="button" data-m="preguntar">Preguntar a la obra</button><button class="btn modocv" type="button" data-m="prueba">Ponme a prueba</button><button class="btn modocv" type="button" data-m="socratico">Socrático</button></div>
         <label>Alcance <select class="alcancecv"></select></label><button class="btn nuevacv" type="button">Nueva conversación</button></div>
@@ -893,7 +893,7 @@ export function montarLectura(raiz, D, opciones = {}) {
     return f;
   }
   function reglas() {
-    return `Eres el compañero de lectura del Explorador de motivos. Conversas con una persona que YA LEYÓ la obra y quiere comprenderla mejor (para un trabajo, una tesis o por curiosidad).
+    return `Eres el compañero de lectura de Urdimbre, un explorador de motivos literarios. Conversas con una persona que YA LEYÓ la obra y quiere comprenderla mejor (para un trabajo, una tesis o por curiosidad).
 REGLAS
 1. Usa SOLO los fragmentos numerados que recibes${CV.tools ? " y los que encuentres con la herramienta buscar_en_la_obra" : ""}. No uses lo que sepas de la obra por otras fuentes; si algo no está en los fragmentos, di que no lo encuentras en ellos y sugiere qué buscar o en qué capítulo mirar.
 2. Cada afirmación sobre la obra lleva la cita del fragmento con su número entre corchetes, por ejemplo [1532]. Ese número identifica la frase; no es una página. No inventes números.
@@ -1027,8 +1027,8 @@ ${fichaObra()}`;
   }
   const notasMarkdown = () => `# Notas de lectura: ${D.titulo}${D.autor ? " (" + D.autor + ")" : ""}\n${S.autor ? `\nLectores: ${[S.autor].concat([...new Set(S.notas.map(n => n.de).filter(Boolean))]).join(", ")}\n` : ""}\n` + S.notas.map(n => `## ${n.ref}${n.de ? ` (de ${n.de})` : (S.autor ? ` (de ${S.autor})` : "")}\n\n${n.texto ? n.texto + "\n\n" : ""}` +
     n.citas.map(c => `> ${c.tx}\n> — ${D.titulo}, ${c.lug}\n`).join("\n")).join("\n") +
-    `\n---\nMotivos usados: ${S.motivos.map(m => `${m.n} (${m.f.join(", ")})`).join("; ")}\nGenerado con Explorador de motivos v1.3\n`;
-  function proyecto() { return {herramienta: "Explorador de motivos", version: "1.3", guardado: new Date().toISOString(), datos: D,
+    `\n---\nMotivos usados: ${S.motivos.map(m => `${m.n} (${m.f.join(", ")})`).join("; ")}\nGenerado con Urdimbre (explorador de motivos) v1.3.1\n`;
+  function proyecto() { return {herramienta: "Urdimbre", version: "1.3.1", guardado: new Date().toISOString(), datos: D,
     estado: {motivos: S.motivos, notas: S.notas, unidad: S.unidad, reparto: S.reparto, familia: S.familia, autor: S.autor || ""}}; }
 
   let vista = "hallazgos", reloj = null;
@@ -1071,7 +1071,7 @@ ${fichaObra()}`;
       const otra = p.datos.titulo !== D.titulo;
       let n0 = 0; notas.forEach(n => { if (!n.texto && !(n.citas || []).length) return; S.notas.push({...n, id: Date.now() + Math.random(), de}); n0++; });
       pintarCuaderno(); cambio(); aviso(`${n0} notas de ${de} unidas${otra ? " (son de otra obra)" : ""}`);
-    } catch (e) { aviso("Ese archivo no es un proyecto del Explorador de motivos"); }
+    } catch (e) { aviso("Ese archivo no es un proyecto de Urdimbre"); }
     ev.target.value = ""; };
   if (PJM) {
     $('nav button[data-v="personajes"]').hidden = false;
